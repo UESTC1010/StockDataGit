@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.Set;
 
 
 public class IPtest implements Runnable {
@@ -26,10 +27,17 @@ public class IPtest implements Runnable {
 				System.out.println("返回内容为空");
 			}
 			count++;
+			System.out.println(xqstock);
+			System.out.println(count);
 			if (count/50 == 0){
 				System.out.println("第"+count/50+"个50页");
 			}
 		}}
 	}
-
+	public static void main(String args[]){
+		Set<String> sadd = GetStockRealData.GetAllStock();
+		Iterator<String> iter = sadd.iterator();
+		
+	    new Thread(new IPtest(iter)).start();
+	}
 }

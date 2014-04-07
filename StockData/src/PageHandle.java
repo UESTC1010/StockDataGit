@@ -1,6 +1,7 @@
 import java.io.IOException;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
@@ -15,10 +16,11 @@ import org.apache.http.util.EntityUtils;
 public class PageHandle {
 
 	public static String downloadpage(String url){
+		HttpHost proxy = new HttpHost("60.190.138.151", 80, "http");
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpGet httpget = new HttpGet(url);
 		RequestConfig requestConfig = RequestConfig.custom()
-		.setConnectTimeout(30000)
+		.setProxy(proxy).setConnectTimeout(30000)
 		.setConnectionRequestTimeout(30000)
 		.setSocketTimeout(30000)
 		.setExpectContinueEnabled(true).build();

@@ -45,7 +45,7 @@ public class GetStockRealData {
 			String stockinfo = it.next();
 			String code = stockinfo.substring(1, 7);  
 			System.out.println(code);
-			GetStockRealData.getStockCsvData(code, "20140401", "20140402");
+			GetStockRealData.getStockCsvData(code, "20130601", "20140402");
 		}
 //		
 		
@@ -62,7 +62,7 @@ public class GetStockRealData {
 					String code = stockinfo.substring(1, 7);  
 					GetStockRealData.AddDataToXls(code,todayDate);
 				}
-			    new Thread(new IPtest(iter)).start();
+			   // new Thread(new IPtest(iter)).start();
 			}
 			try {
 				Thread.sleep(24*60*60*1000-4*60*1000);
