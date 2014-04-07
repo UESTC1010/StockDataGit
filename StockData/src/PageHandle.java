@@ -16,11 +16,12 @@ import org.apache.http.util.EntityUtils;
 public class PageHandle {
 
 	public static String downloadpage(String url){
-		HttpHost proxy = new HttpHost("60.190.138.151", 80, "http");
+		//HttpHost proxy = new HttpHost("60.190.138.151", 80, "http");
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpGet httpget = new HttpGet(url);
 		RequestConfig requestConfig = RequestConfig.custom()
-		.setProxy(proxy).setConnectTimeout(30000)
+		//.setProxy(proxy)
+		.setConnectTimeout(30000)
 		.setConnectionRequestTimeout(30000)
 		.setSocketTimeout(30000)
 		.setExpectContinueEnabled(true).build();
@@ -28,14 +29,15 @@ public class PageHandle {
 		ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
 			@Override
 			public String handleResponse(HttpResponse response)
-					throws ClientProtocolException, IOException {
+					throws IOException {
 				int statuscode = response.getStatusLine().getStatusCode();
 				if(HttpStatus.SC_OK == statuscode ){
 					
 					HttpEntity entity = response.getEntity();
 					return entity != null? EntityUtils.toString(entity,"utf-8"):null;
 				}else {
-	                throw new ClientProtocolException("Unexpected response status: " + statuscode);
+					return null;
+//	                throw new ClientProtocolException("Unexpected response status: " + statuscode);
 	            } 
 			}
 		};

@@ -25,11 +25,12 @@ public class IPtest implements Runnable {
 			String xqstock = xueqiuweb + code; 
 			if( PageHandle.downloadpage(xqstock) == null){
 				System.out.println("返回内容为空");
+				System.out.println(xqstock);
 			}
 			count++;
-			System.out.println(xqstock);
-			System.out.println(count);
-			if (count/50 == 0){
+			
+			//System.out.println(count);
+			if (count%50 == 0){
 				System.out.println("第"+count/50+"个50页");
 			}
 		}}
