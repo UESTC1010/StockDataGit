@@ -38,40 +38,40 @@ public class GetStockRealData {
 	public static final String  stopstockpath  = "D:/stock_realdata/stopstock.txt";
 	public static DecimalFormat df = new DecimalFormat("#.00");
 	public static void main(String[] args) {
-		Set<String> s = GetAllStock();	
-		Iterator<String> it = s.iterator();
-		
-		while(it.hasNext()){
-			String stockinfo = it.next();
-			String code = stockinfo.substring(1, 7);  
-			System.out.println(code);
-			GetStockRealData.getStockCsvData(code, "20130601", "20140402");
-		}
+//		Set<String> s = GetAllStock();	
+//		Iterator<String> it = s.iterator();
 //		
-		
-		while(true){
-			Date date = new Date();
-			if (date.getDay() != 0 &&date.getDay() != 6){
-				SimpleDateFormat timedf = new SimpleDateFormat("yyyyMMdd");//设置日期格式
-				String todayDate = timedf.format(new Date());
-//		     	System.out.println(todayDate);
-				Set<String> sadd = GetAllStock();
-				Iterator<String> iter = sadd.iterator();
-				while(iter.hasNext()){
-					String stockinfo = iter.next();
-					String code = stockinfo.substring(1, 7);  
-					GetStockRealData.AddDataToXls(code,todayDate);
-				}
-			   // new Thread(new IPtest(iter)).start();
-			}
-			try {
-				Thread.sleep(24*60*60*1000-4*60*1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+//		while(it.hasNext()){
+//			String stockinfo = it.next();
+//			String code = stockinfo.substring(1, 7);  
+//			System.out.println(code);
+//			GetStockRealData.getStockCsvData(code, "20130601", "20140402");
+//		}
+////		
+//		
+//		while(true){
+//			Date date = new Date();
+//			if (date.getDay() != 0 &&date.getDay() != 6){
+//				SimpleDateFormat timedf = new SimpleDateFormat("yyyyMMdd");//设置日期格式
+//				String todayDate = timedf.format(new Date());
+////		     	System.out.println(todayDate);
+//				Set<String> sadd = GetAllStock();
+//				Iterator<String> iter = sadd.iterator();
+//				while(iter.hasNext()){
+//					String stockinfo = iter.next();
+//					String code = stockinfo.substring(1, 7);  
+//					GetStockRealData.AddDataToXls(code,todayDate);
+//				}
+//			   // new Thread(new IPtest(iter)).start();
+//			}
+//			try {
+//				Thread.sleep(24*60*60*1000-4*60*1000);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
 //		GetStockRealData.AddDataToXls("000333","20140326");
-//		GetStockRealData.getStockCsvData("600263", "20130601", "20140327");
+		GetStockRealData.getStockCsvData("000157", "20130601", "20140327");
 	}
 	
 	public static Set<String> GetAllStock(){
@@ -163,7 +163,7 @@ public class GetStockRealData {
 	 private static Stockdata GetDataFromJson(String code, String fromDate,
 			String toDate) {
 		 	String url = SOHU_FINANCE_URL + "code=cn_" + code + "&start=" + fromDate + "&end=" + toDate + "&order=A&period=d&rt=json";
-//	        System.out.println(url);
+	        System.out.println(url);
 	        URL MyURL = null;
 	        URLConnection con = null;
 	        String json="";
@@ -187,6 +187,7 @@ public class GetStockRealData {
 			
 			Gson gson = new Gson();
 			Stockdata data = gson.fromJson(json,Stockdata.class);
+			System.out.println(data.getCode()+"    "+data.getStatus() );
 			return data;
 	}
 	public static void AddDataToXls(String code, String todayDate){
