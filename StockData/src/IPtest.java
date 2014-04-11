@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 public class IPtest implements Runnable {
 	String code = null;
 	static final private String xueqiuweb = "http://xueqiu.com/S/";
-	private static final int stocknumber = 50;
+	private static final int stocknumber = 200;
 	public IPtest(String code) {
 		super();
 		this.code = code;
