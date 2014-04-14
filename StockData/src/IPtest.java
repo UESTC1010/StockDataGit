@@ -19,7 +19,8 @@ import com.google.gson.Gson;
 public class IPtest implements Runnable {
 	String code = null;
 	static final private String xueqiuweb = "http://xueqiu.com/S/";
-	private static final int stocknumber = 200;
+	private static final int stocknumber = 10;
+	static ExecutorService tt;
 	public IPtest(String code) {
 		super();
 		this.code = code;
@@ -32,14 +33,14 @@ public class IPtest implements Runnable {
 	@Override
 	public void run() {
 		int pagenum = 1;
-		String url = "http://xueqiu.com/statuses/search.json?count=15&comment=0&symbol="+code+"&hl=0&source=user&page="+pagenum;
+		String url = "http://xueqiu.com/statuses/search.json?count=10&comment=0&symbol="+code+"&hl=0&source=user&page="+pagenum;
 		int maxpage = GetDataFromJson(url);
 		System.out.println(code+"股票的页数为"+maxpage);
 		if(maxpage != -1){
 		for(int i=2;i<=maxpage;i++){
-			url = "http://xueqiu.com/statuses/search.json?count=15&comment=0&symbol="+code+"&hl=0&source=user&page="+i;
+			url = "http://xueqiu.com/statuses/search.json?count=10&comment=0&symbol="+code+"&hl=0&source=user&page="+i;
 			System.out.println("code="+code +"      page="+ i);
-			GetDataFromJson(url);
+			tt.execute(new GetPageThread(url));
 		}}
 	}
 	
@@ -50,7 +51,7 @@ public class IPtest implements Runnable {
 			Iterator<String> itw = iter;
 			int count = 0;
 			while(itw.hasNext()){
-				ExecutorService tt = Executors.newCachedThreadPool();
+				tt = Executors.newCachedThreadPool();
 					for(int j=0; j<stocknumber; j++){
 						if(itw.hasNext()){
 							String stockinfo = itw.next();
