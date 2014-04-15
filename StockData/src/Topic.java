@@ -1,6 +1,3 @@
-import java.util.Date;
-
-
 public class Topic {
 	String id;
 	String user_id;
@@ -10,6 +7,7 @@ public class Topic {
 	int reply_count;
 	int fav_count;
 	String commentId;
+	String retweet_status_id;
 	String text;
 	@Override
 	public String toString() {
@@ -18,4 +16,5 @@ public class Topic {
 				+ reply_count + ", retweet_count=" + retweet_count + ", text="
 				+ text + ", title=" + title + ", user_id=" + user_id + "]";
 	}
+	
 }

@@ -1,7 +1,8 @@
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
@@ -57,5 +58,24 @@ public class PageHandle {
 		}
 		
 		return responseBody;
+	}
+	
+	public static int GetMaxPageNum(String json){
+		System.out.println(json);
+		int maxpage = 0;
+		String regex1 = "maxPage\":(.*?),";
+		Pattern pattern = Pattern.compile(regex1);
+		Matcher matcher = pattern.matcher(json);
+		
+		while(matcher.find()){			
+			maxpage = Integer.parseInt(matcher.group(1));
+			System.out.println(maxpage);
+		}
+		return maxpage;
+	}
+	public static void main(String args[]){
+		String url = "http://xueqiu.com/statuses/search.json?count=10&comment=0&symbol=SZ000333&hl=0&source=user&page=1";
+		String json = PageHandle.downloadpage(url);
+		PageHandle.GetMaxPageNum(json);
 	}
 }
