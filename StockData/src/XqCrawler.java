@@ -17,7 +17,9 @@ public class XqCrawler{
 	public static void main(String args[]){
 		Set<String> sadd = GetStockRealData.GetAllStock();
 		Iterator<String> iter = sadd.iterator();
+		
 		while(true){
+			DBControl db = new DBControl();
 			Iterator<String> itw = iter;
 			int count = 0;
 			while(itw.hasNext()){

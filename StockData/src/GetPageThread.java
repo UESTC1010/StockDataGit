@@ -5,67 +5,41 @@ import com.google.gson.Gson;
 
 public class GetPageThread implements Runnable {
 	String url;
-	public GetPageThread(String url) {
+	String code;
+	static int x = 0;
+	public GetPageThread(String url, String code) {
 		super();
 		this.url = url;
+		this.code = code;
 	}
 	@Override
 	public void run() {
+		
 		String json = PageHandle.downloadpage(url);
 		if(json != null){
 			Gson gson = new Gson();
 			Page page = gson.fromJson(json,Page.class);
+			
 			if(page.list != null){
 				Iterator<Topic> it = page.list.iterator();
-				int i=0;
 				while(it.hasNext()){
-					it.next();
-					i++;
+					DBControl.SaveTopic(code, it.next());
 				}
 			}
+			else {
+				x++;
+//				System.out.println(page.toString());
+//				System.out.println("-------股票"+page.symbol+"没有list-------"+url);
+				System.out.println(x);
+			}
 		}
-		else
-		{
-			
-		}
-//		 URL MyURL = null;
-//	        HttpURLConnection  con = null;
-//	        String json="";
-//	        try {
-//				MyURL = new URL(url);
-//				con = (HttpURLConnection) MyURL.openConnection();
-//				if( con.getResponseCode()==200 ){
-//				
-//				 BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(),"utf-8"));
-//		         String line = null;
-//		         while ((line = reader.readLine()) != null)
-//		         {
-//		        	 json = json+line;
-////		        	 System.out.println(line);
-//		         }
-//		         reader.close();
-//		         
-//		         Gson gson = new Gson();
-//					Page page = gson.fromJson(json,Page.class);
-////					System.out.println(page.toString());
-//					Iterator it = page.list.iterator();
-//					int i=0;
-//					while(it.hasNext()){
-////						System.out.println(it.next().toString());
-//						it.next();
-//						i++;
-//					}
-////					System.out.println(page.symbol+" maxpage :   "+page.maxPage);
-//				
-//				}
-//				else {
-//					System.out.println("终止上市："+url);
-//					
-//				}
-//			} catch (IOException es) {
-//				es.printStackTrace();
-//			} 
-//			
 	}
-
+	
+	//main test
+	public static void main(String args[]){
+		
+		String url = "http://xueqiu.com/statuses/search.json?count=10&comment=0&symbol=SZ000559&hl=0&source=user&page=1000";
+		new Thread(new GetPageThread(url,"SZ000559")).start();
+	}
+	
 }

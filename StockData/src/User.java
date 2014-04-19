@@ -1,12 +1,12 @@
 
 public class User {
-//	id
-//	description
-//	screen_name
-//	followers_count
-//	province
-//	city
-//	gender
-//	status_count
-//	friends_count
-}
+	String id;
+	String screen_name;
+	int followers_count;
+	String province;
+	String gender;
+	int status_count;
+	boolean verified;
+	int friends_count;
+	int verified_type;
+}	

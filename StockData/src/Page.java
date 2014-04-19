@@ -9,8 +9,9 @@ public class Page {
 	List<Topic> list;
 	@Override
 	public String toString() {
-		return "Page [count=" + count + ", maxPage="
+		return "Page [count=" + count + ", list=" + list + ", maxPage="
 				+ maxPage + ", page=" + page + ", symbol=" + symbol + "]";
 	}
+	
 	
 }
