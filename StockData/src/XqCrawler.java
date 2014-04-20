@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class XqCrawler{
 	
 	static final private String xueqiuweb = "http://xueqiu.com/S/";
-	private static final int stocknumber = 10;
+	private static final int stocknumber = 200;
 	public static ExecutorService tt;
 	
 	
