@@ -1,3 +1,5 @@
+import java.util.Date;
+
 import com.google.code.morphia.annotations.Id;
 
 public class Topic {
@@ -5,7 +7,7 @@ public class Topic {
 	String id;
 	String user_id;
 	String title;
-	String created_at;
+	Date created_at;
 	int retweet_count;
 	int reply_count;
 	int fav_count;

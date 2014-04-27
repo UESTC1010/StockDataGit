@@ -1,9 +1,11 @@
 import java.net.UnknownHostException;
+import java.util.Date;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
@@ -46,4 +48,27 @@ public class DBControl {
 		DBObject DbObj = morphia.toDBObject(topic);
 		db.getCollection(code).save(DbObj);
 	}
+
+	public static String GetText(String code, Date start, Date end) {
+		String alltext = "";
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("created_at", new BasicDBObject("$gte", start).append("$lte", end));
+		DBCursor cursor = db.getCollection(code).find(keys);
+//		long x = db.getCollection(code).count(keys);		
+
+		while(cursor.hasNext()){
+			for(int i =0; i<1000 ;i++){
+				String text = DeleteNoise(String.valueOf(cursor.next().get("text")));
+				alltext += String.valueOf(cursor.next().get("text"));
+			}
+		}
+		System.out.println(alltext);
+		return alltext;
+	}
+
+	private static String DeleteNoise(String text) {
+		String noHtmlContent = text.replaceAll("<[^>]*>","").replaceAll("&nbsp", "");
+		return noHtmlContent;
+	}
+	
 }

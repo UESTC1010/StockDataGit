@@ -83,14 +83,14 @@ public class PageHandle {
 		int[] value = new int[2];
 		int maxpage = 0;
 		int count = 0;
-		String regex1 = "\"count\":(.*?),\"maxPage\":(.*?),";
-//		String regex1 = "\"maxPage\":(.*?),.*?\"count\":(.*?),";
+//		String regex1 = "\"count\":(.*?),\"maxPage\":(.*?),";
+		String regex1 = "\"maxPage\":(.*?),.*?\"count\":(.*?),";
 		Pattern pattern = Pattern.compile(regex1);
 		Matcher matcher = pattern.matcher(json);
 		
 		while(matcher.find()){		
-			count = Integer.parseInt(matcher.group(1));
-			maxpage = Integer.parseInt(matcher.group(2));
+			count = Integer.parseInt(matcher.group(2));
+			maxpage = Integer.parseInt(matcher.group(1));
 //			System.out.println();
 		}
 		value[0] = count;
