@@ -15,15 +15,16 @@ public class DBControl {
 	static Morphia morphia = null;
 	static Datastore ds = null;
 	static DB db = null;
-	public DBControl() {
+	public DBControl(String dbname) {
 		try {
 			mongo = new Mongo();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		db = mongo.getDB("xueqiu");
+		db = mongo.getDB(dbname);
 		morphia = new Morphia();
 		morphia.map(Topic.class);
+		morphia.map(StockData.class);
 	}
 	
 	public void close(){
@@ -49,20 +50,24 @@ public class DBControl {
 		db.getCollection(code).save(DbObj);
 	}
 
+
+	public static void SaveStockData(String code, StockData stockdata) {
+		DBObject DbObj = morphia.toDBObject(stockdata);
+		db.getCollection(code).save(DbObj);
+	}
+	
 	public static String GetText(String code, Date start, Date end) {
 		String alltext = "";
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("created_at", new BasicDBObject("$gte", start).append("$lte", end));
 		DBCursor cursor = db.getCollection(code).find(keys);
-//		long x = db.getCollection(code).count(keys);		
+		long x = db.getCollection(code).count(keys);		
 
 		while(cursor.hasNext()){
-			for(int i =0; i<1000 ;i++){
 				String text = DeleteNoise(String.valueOf(cursor.next().get("text")));
-				alltext += String.valueOf(cursor.next().get("text"));
-			}
+				alltext += text;
 		}
-		System.out.println(alltext);
+		System.out.println(x);
 		return alltext;
 	}
 
@@ -70,5 +75,23 @@ public class DBControl {
 		String noHtmlContent = text.replaceAll("<[^>]*>","").replaceAll("&nbsp", "");
 		return noHtmlContent;
 	}
+
+	public static double GetZhangfu(String code, Date start) {
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("_id", start);
+		DBCursor cursor = db.getCollection(code).find(keys);
+		while(cursor.hasNext()){
+			double zhengfu = Double.valueOf((String)cursor.next().get("zhengfu"));
+//			if(zhengfu<-0.3)
+//				return -1;
+//			else if(zhengfu>0.3)
+//				return 1;
+//			else
+//				return 0;
+			return zhengfu;
+		}
+		return 2;
+	}
+
 	
 }

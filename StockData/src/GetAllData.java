@@ -1,7 +1,10 @@
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.concurrent.Executors;
+
+import jxl.write.DateFormat;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -112,13 +115,10 @@ public class GetAllData implements Runnable {
 	}
 	//main test
 	public static void main(String args[]){
-		DBControl db = new DBControl();
-		
-		Date start = new Date(100+14, 3, 24, 0, 0);
-		Date end = new Date(100+14, 3, 27, 0, 0);
-		System.out.println(start);
-		System.out.println(end);
-		db.GetText("SZ300027", start, end);
+//		DBControl db = new DBControl();
+//		Date start = new Date(100+14, 3, 20, 0, 0);
+//		Date end = new Date(100+14, 3, 23, 0, 0);
+//		db.GetText("SZ300027", start, end);
 //		new Thread(new GetAllData("SZ300104")).start();
 //		GetAllData aa = new GetAllData("SZ000333");
 //		aa.getpage("http://xueqiu.com/statuses/search.json?count=1&comment=0&symbol=SZ000333&hl=0&source=user&page=1&access_token=CSr4RehgUt3wohdtqUTp9E");

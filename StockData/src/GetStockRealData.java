@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -38,6 +40,7 @@ public class GetStockRealData {
 	public static final String  stopstockpath  = "D:/stock_realdata/stopstock.txt";
 	public static final String  suspendstockpath = "D:/stock_realdata/suspendstock.txt";
 	public static DecimalFormat df = new DecimalFormat("#.00");
+	public static DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 	
 	public static Set<String> GetAllStock(){
 		String htmlcode = PageHandle.downloadpage(stocklistpage);
@@ -125,37 +128,58 @@ public class GetStockRealData {
         if(hisdata==null)
         	writestopstock(stopstockpath, code);
         else{
-        WritableWorkbook book = null;
-		try {
-			book = Workbook.createWorkbook(new File("D:/stock_realdata/"+code+".xls"));
-			WritableSheet sheet = book.createSheet("第一页", 0);  
-			String[] title = { "时间", "开盘", "收盘", "振幅", "涨幅",  
-	                "最低", "最高", "总手", "总金","换手率" };  
-	        for (int i = 0; i < title.length; i++) {  
-	            Label lable = new Label(i, 0, title[i]);  
-	            sheet.addCell(lable);  
-	        }  
-	        
-		    for(int i=0;i<hisdata.length;i++)
-		        for(int j=0;j<hisdata[0].length;j++){
-		        	if(j==3){ 
-		        		String zhengfu = df.format( 100*( Double.parseDouble(hisdata[i][6])-Double.parseDouble(hisdata[i][5]) )/( Double.parseDouble(hisdata[i][2])-Double.parseDouble(hisdata[i][3]) ));
-		        		hisdata[i][3] = zhengfu +"%";
-		        	}
-		        	Label lable = new Label(j, i+1, hisdata[i][j]);  
-		            sheet.addCell(lable);  
-		        }
-		    book.write();  
-	        book.close();  
-	        System.out.println("写入成功"); 
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (RowsExceededException e) {
-			e.printStackTrace();
-		} catch (WriteException e) {
-			e.printStackTrace();
-		}   
-        }
+        	System.out.println(hisdata.length);
+        	for(int i = 0;i<hisdata.length;i++){
+        		StockData stockdata = new StockData();
+        		
+        		try {
+					stockdata.setTime(dateformat.parse(hisdata[i][0]));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				
+        		stockdata.setKaipan(hisdata[i][1]);
+        		stockdata.setShoupan(hisdata[i][2]);
+        		stockdata.setZhengfu(hisdata[i][3]);
+        		stockdata.setZhangfu(hisdata[i][4]);
+        		stockdata.setZuidi(hisdata[i][5]);
+        		stockdata.setZuigao(hisdata[i][6]);
+        		stockdata.setZongshou(hisdata[i][7]);
+        		stockdata.setZongjin(hisdata[i][8]);
+        		stockdata.setHuanshou(hisdata[i][9]);
+        		DBControl.SaveStockData("SZ"+code,stockdata);
+        	} 
+//        	WritableWorkbook book = null;
+//        	try {
+//        		book = Workbook.createWorkbook(new File("D:/stock_realdata/"+code+".xls"));
+//        		WritableSheet sheet = book.createSheet("第一页", 0);  
+//        		String[] title = { "时间", "开盘", "收盘", "振幅", "涨幅",  
+//	                "最低", "最高", "总手", "总金","换手率" };  
+//        		for (int i = 0; i < title.length; i++) {  
+//        			Label lable = new Label(i, 0, title[i]);  
+//        			sheet.addCell(lable);  
+//        		}  
+//	        
+//        		for(int i=0;i<hisdata.length;i++)
+//        			for(int j=0;j<hisdata[0].length;j++){
+//        				if(j==3){ 
+//        					String zhengfu = df.format( 100*( Double.parseDouble(hisdata[i][6])-Double.parseDouble(hisdata[i][5]) )/( Double.parseDouble(hisdata[i][2])-Double.parseDouble(hisdata[i][3]) ));
+//        					hisdata[i][3] = zhengfu +"%";
+//        				}
+//        				Label lable = new Label(j, i+1, hisdata[i][j]);  
+//        				sheet.addCell(lable);  
+//        			}
+//        		book.write();  
+//        		book.close();  
+//        		System.out.println("写入成功"); 
+//        		} catch (IOException e) {
+//        			e.printStackTrace();
+//        		} catch (RowsExceededException e) {
+//        			e.printStackTrace();
+//        		} catch (WriteException e) {
+//        			e.printStackTrace();
+//        		}   
+        	}
 	 	}
  }
  
@@ -226,40 +250,43 @@ public static boolean DeleteFolder(String sPath) {
     }
 }
 	public static void main(String[] args) {
-		Set<String> s = GetAllStock();	
-		Iterator<String> it = s.iterator();
-		
-		while(it.hasNext()){
-			String stockinfo = it.next();
-			String code = stockinfo.substring(1, 7);  
-			System.out.println(code);
-			GetStockRealData.getStockCsvData(code, "20140301", "20140418");
-		}
+		DBControl db = new DBControl("xueqiu");
+		GetStockRealData.getStockCsvData("300027", "20130601", "20140428");
+//		Set<String> s = GetAllStock();	
+//		Iterator<String> it = s.iterator();
+//		
+//		while(it.hasNext()){
+//			String stockinfo = it.next();
+//			String code = stockinfo.substring(1, 7);  
+//			System.out.println(code);
+//			GetStockRealData.getStockCsvData(code, "20140301", "20140418");
+//		}
 //		
 		
-		while(true){
-			Date date = new Date();
-			if (date.getDay() != 0 &&date.getDay() != 6){
-				SimpleDateFormat timedf = new SimpleDateFormat("yyyyMMdd");//设置日期格式
-				String todayDate = timedf.format(new Date());
-//		     	System.out.println(todayDate);
-				Set<String> sadd = GetAllStock();
-				Iterator<String> iter = sadd.iterator();
-				while(iter.hasNext()){
-					String stockinfo = iter.next();
-					String code = stockinfo.substring(1, 7);  
-					GetStockRealData.AddDataToXls(code,todayDate);
-				}
-			  
-			}
-			try {
-				Thread.sleep(24*60*60*1000-4*60*1000);
-				GetStockRealData.DeleteFolder(suspendstockpath);
-				GetStockRealData.DeleteFolder(stopstockpath);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+//		while(true){
+//			Date date = new Date();
+//			if (date.getDay() != 0 &&date.getDay() != 6){
+//				SimpleDateFormat timedf = new SimpleDateFormat("yyyyMMdd");//设置日期格式
+//				String todayDate = timedf.format(new Date());
+////		     	System.out.println(todayDate);
+//				Set<String> sadd = GetAllStock();
+//				Iterator<String> iter = sadd.iterator();
+//				while(iter.hasNext()){
+//					String stockinfo = iter.next();
+//					String code = stockinfo.substring(1, 7);  
+//					GetStockRealData.AddDataToXls(code,todayDate);
+//				}
+//			  
+//			}
+//			try {
+//				Thread.sleep(24*60*60*1000-4*60*1000);
+//				GetStockRealData.DeleteFolder(suspendstockpath);
+//				GetStockRealData.DeleteFolder(stopstockpath);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
+		
 //		GetStockRealData.AddDataToXls("000333","20140326");
 //		GetStockRealData.getStockCsvData("000157", "20130601", "20140327");
 	}

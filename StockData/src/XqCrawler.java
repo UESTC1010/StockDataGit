@@ -19,7 +19,7 @@ public class XqCrawler{
 		Iterator<String> iter = sadd.iterator();
 		
 		while(true){
-			DBControl db = new DBControl();
+			DBControl db = new DBControl("xueqiu");
 			Iterator<String> itw = iter;
 			int count = 0;
 			while(itw.hasNext()){
