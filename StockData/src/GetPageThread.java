@@ -1,6 +1,17 @@
+import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.Iterator;
 
+
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 
 public class GetPageThread implements Runnable {
@@ -15,9 +26,9 @@ public class GetPageThread implements Runnable {
 	@Override
 	public void run() {
 		
-		String json = PageHandle.downloadpage(url);
+		String json = PageHandle.downloadpage(url,"127.0.0.1;80");
 		if(json != null){
-			Gson gson = new Gson();
+			Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
 			Page page = gson.fromJson(json,Page.class);
 			
 			if(page.list != null){
@@ -34,7 +45,20 @@ public class GetPageThread implements Runnable {
 			}
 		}
 	}
-	
+	public class DateTypeAdapter implements JsonSerializer<Date>, JsonDeserializer<Date>{
+
+		@Override
+		public JsonElement serialize(Date arg0, Type arg1,
+				JsonSerializationContext arg2) {
+			return new JsonPrimitive(String.valueOf(arg0.getTime()));
+		}
+
+		@Override
+		public Date deserialize(JsonElement arg0, Type arg1,
+				JsonDeserializationContext arg2) throws JsonParseException {
+			return new Date(Long.valueOf(arg0.getAsString()));
+		}  
+	}
 	//main test
 	public static void main(String args[]){
 		

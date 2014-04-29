@@ -43,7 +43,7 @@ public class GetStockRealData {
 	public static DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 	
 	public static Set<String> GetAllStock(){
-		String htmlcode = PageHandle.downloadpage(stocklistpage);
+		String htmlcode = PageHandle.downloadpage(stocklistpage,"127.0.0.1:8080");
 		
 		if(htmlcode != null){
 			Parser parser = null;
