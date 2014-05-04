@@ -13,6 +13,7 @@ import org.neuroph.core.NeuralNetwork;
 import org.neuroph.core.learning.SupervisedTrainingElement;
 import org.neuroph.core.learning.TrainingSet;
 import org.neuroph.nnet.MultiLayerPerceptron;
+import org.neuroph.nnet.learning.BackPropagation;
 import org.neuroph.nnet.learning.MomentumBackpropagation;
 import org.neuroph.util.TransferFunctionType;
 
@@ -105,12 +106,11 @@ public class NNTrain {
 		return nextday;
 	}
 	public void nntrain(String code, Date start, Date end){
-		neuralNet = new MultiLayerPerceptron(TransferFunctionType.TANH, inputnum, 3,1);
-		MomentumBackpropagation learningRule = (MomentumBackpropagation) neuralNet
+		neuralNet = new MultiLayerPerceptron(TransferFunctionType.TANH, inputnum, 4,1);
+		BackPropagation learningRule = (BackPropagation) neuralNet
 				.getLearningRule();
-		learningRule.setLearningRate(0.2);
-		learningRule.setMomentum(0.5);	
-		learningRule.setMaxError(0.5);
+		learningRule.setLearningRate(0.3);
+		learningRule.setMaxError(0.1);
 
 		// create training set
 		trainingSet = getdataset(code,start, end);
@@ -152,7 +152,7 @@ public class NNTrain {
 //			System.out.println(n);}
 		
 		try {
-			Date start = format.parse("2013-06-1 00:00:00");
+			Date start = format.parse("2014-01-01 00:00:00");
 			Date end = format.parse("2014-03-23 00:00:00");
 //			System.out.println(start);
 //			System.out.println(end);

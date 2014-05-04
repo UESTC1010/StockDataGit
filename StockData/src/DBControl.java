@@ -82,13 +82,13 @@ public class DBControl {
 		DBCursor cursor = db.getCollection(code).find(keys);
 		while(cursor.hasNext()){
 			double zhengfu = Double.valueOf((String)cursor.next().get("zhengfu"));
-//			if(zhengfu<-0.3)
-//				return -1;
-//			else if(zhengfu>0.3)
-//				return 1;
-//			else
-//				return 0;
-			return zhengfu;
+			if(zhengfu<-0.3)
+				return -1;
+			else if(zhengfu>0.3)
+				return 1;
+			else
+				return 0;
+//			return zhengfu;
 		}
 		return 2;
 	}
