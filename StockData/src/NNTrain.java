@@ -142,7 +142,7 @@ public class NNTrain {
 		}
 	}
 	public static void main(String args[]){
-		DBControl db = new DBControl("xueqiu");
+		DBControl.init("xueqiu");
 		NNTrain nn = new NNTrain();
 		
 		String KWpath = "C://Users//rushshi//Desktop//dic.txt"; 

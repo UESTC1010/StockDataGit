@@ -15,7 +15,7 @@ public class DBControl {
 	static Morphia morphia = null;
 	static Datastore ds = null;
 	static DB db = null;
-	public DBControl(String dbname) {
+	public static void init(String dbname) {
 		try {
 			mongo = new Mongo();
 		} catch (UnknownHostException e) {
@@ -31,10 +31,12 @@ public class DBControl {
 		mongo.close();
 	}
 	public static void SaveCount(String code, int count){
-		DBObject stock = new BasicDBObject();
-		stock.put("symbol", code);
-		stock.put("count", count);
-		db.getCollection(code).save(stock);
+		DBObject oldcount = new BasicDBObject();
+		DBObject newcount = new BasicDBObject();
+		oldcount.put("symbol", code);
+		newcount.put("symbol", code);
+		newcount.put("count", count);
+		db.getCollection(code).update(oldcount, newcount,true,false);
 	}
 	public static int GetCount(String code){
 		DBObject object = new BasicDBObject();
@@ -52,6 +54,10 @@ public class DBControl {
 
 
 	public static void SaveStockData(String code, StockData stockdata) {
+		if(code.startsWith("60")||code.startsWith("90"))
+			code = "SH"+code;
+		else
+			code = "SZ"+code;
 		DBObject DbObj = morphia.toDBObject(stockdata);
 		db.getCollection(code).save(DbObj);
 	}

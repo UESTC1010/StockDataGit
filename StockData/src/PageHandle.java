@@ -19,26 +19,12 @@ import org.apache.http.util.EntityUtils;
 
 
 public class PageHandle {
-	public static String downloadpage(String url, String proxypara){
-		String[] para = proxypara.split(":");
-//		System.out.println(para[0] + "  "+para[1]);
-		RequestConfig requestConfig = null;
-		if(para[0].equals("127.0.0.1")){
-			requestConfig= RequestConfig.custom()
+	public static String downloadpage(String url){
+		RequestConfig requestConfig =  RequestConfig.custom()
 			.setConnectTimeout(30000)
 			.setConnectionRequestTimeout(30000)
 			.setSocketTimeout(50000)
 			.setExpectContinueEnabled(true).build();
-		}
-		else{
-			HttpHost proxy = new HttpHost(para[0], Integer.valueOf(para[1]), "http");
-			requestConfig= RequestConfig.custom()
-			.setProxy(proxy)
-			.setConnectTimeout(30000)
-			.setConnectionRequestTimeout(30000)
-			.setSocketTimeout(50000)
-			.setExpectContinueEnabled(true).build();
-		}
 		
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpGet httpget = new HttpGet(url);
@@ -70,7 +56,10 @@ public class PageHandle {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally{
+		} catch(Exception e){
+			System.out.println();
+		}
+		finally{
 			httpget.releaseConnection();
 		}
 		
@@ -98,9 +87,5 @@ public class PageHandle {
 	}
 	public static void main(String args[]){
 		String url = "http://xueqiu.com/statuses/search.json?count=10&comment=0&symbol=SZ002610&hl=0&source=user&page=7";
-//		String json = PageHandle.downloadpage(url,"125.75.51.192:8088");
-		for(int i =0 ; i<XqCrawler.ProxyPool.length;i++)
-			System.out.println(XqCrawler.ProxyPool[i]);
-//		PageHandle.GetMaxPageNum(json.substring(1, 60));
 	}
 }
