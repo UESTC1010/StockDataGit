@@ -1,9 +1,11 @@
+package com.prediction.semantic;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +30,23 @@ public class WordFren {
         }
         return wordsFren;
     }
+	
+	public static HashMap<String,Integer[]> getWordMap(String text) {
+		HashMap<String,Integer[]> wordMap=new HashMap<String,Integer[]>();
+        IKSegmenter ikSegmenter = new IKSegmenter(new StringReader(text), true);
+        Lexeme lexeme;
+        int i = 1;
+        try {
+			while ((lexeme = ikSegmenter.next()) != null) {
+				wordMap.put(lexeme.getLexemeText(),new Integer[]{lexeme.getBeginPosition(),i++});
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return wordMap;
+    }
+	
+	
 	/**
 	 * @param args
 	 */
@@ -55,6 +74,7 @@ public class WordFren {
 			return 0;
 	}
 	
+	
 	public static void main(String[] args) {
 //		DBControl db = new DBControl();
 //		String text =  DBControl.GetText("SZ300027");
@@ -69,6 +89,24 @@ public class WordFren {
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
+		WordFren.getWordList("目测不会涨很久");
+	}
+
+	public static ArrayList<String> getWordList(String string) {
+		ArrayList<String> wordlist=new ArrayList<String>();
+        IKSegmenter ikSegmenter = new IKSegmenter(new StringReader(string), true);
+        Lexeme lexeme;
+        try {
+			while ((lexeme = ikSegmenter.next()) != null) {
+				wordlist.add(lexeme.getLexemeText());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+//		for (String x:wordlist){
+//			System.out.println(x);
+//		}
+		return wordlist;
 	}
 	
 }

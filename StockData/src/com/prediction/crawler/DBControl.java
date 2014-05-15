@@ -1,3 +1,4 @@
+package com.prediction.crawler;
 import java.net.UnknownHostException;
 import java.util.Date;
 
@@ -14,17 +15,18 @@ public class DBControl {
 	static Mongo mongo = null;
 	static Morphia morphia = null;
 	static Datastore ds = null;
-	static DB db = null;
+	public static DB db = null;
 	public static void init(String dbname) {
 		try {
-			mongo = new Mongo();
+			mongo = new Mongo("192.168.1.107",27017);
+//			mongo = new Mongo();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
 		db = mongo.getDB(dbname);
 		morphia = new Morphia();
 		morphia.map(Topic.class);
-		morphia.map(StockData.class);
+		morphia.map(StockData.class);	
 	}
 	
 	public void close(){

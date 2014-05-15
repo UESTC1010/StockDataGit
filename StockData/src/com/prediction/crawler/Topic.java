@@ -1,3 +1,4 @@
+package com.prediction.crawler;
 import java.util.Date;
 
 import com.google.code.morphia.annotations.Id;

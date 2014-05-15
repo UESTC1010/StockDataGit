@@ -1,3 +1,4 @@
+package com.prediction.crawler;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
@@ -20,49 +21,54 @@ public class GetStockRealData implements Runnable{
 	public static final String  stopstockpath  = "D:/stock_realdata/stopstock.txt";
 	public static final String  suspendstockpath = "D:/stock_realdata/suspendstock.txt";
 	public static DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+	String code = null;
 	
 	@Override
 	public void run() {
-		
-		Set<String> s = AllStockCode.GetAllStockcode();	
-		Iterator<String> it = s.iterator();
-		
-		while(it.hasNext()){
-			String stockinfo = it.next();
-			String code = stockinfo.substring(1, 7);  
+//		
+//		Set<String> s = AllStockCode.GetAllStockcode();	
+//		Iterator<String> it = s.iterator();
+//		
+//		while(it.hasNext()){
+//			String stockinfo = it.next();
+//			String code = stockinfo.substring(1, 7);  
 //			System.out.println(code);
-			GetStockRealData.getStockData(code, "20130601", "20140507");
-		}
+			GetStockRealData.getStockData(code, "20140501", "20140511");
+//		}
 		
-		while(true){
-			System.out.println("----------------开始爬取今天数据------------------");
-			Date date = new Date();
-			if (date.getDay() != 0 &&date.getDay() != 6){
-				SimpleDateFormat timedf = new SimpleDateFormat("yyyyMMdd");//设置日期格式
-				String todayDate = timedf.format(new Date());
-//		     	System.out.println(todayDate);
-				
-				Set<String> sadd = AllStockCode.GetAllStockcode();
-				Iterator<String> iter = sadd.iterator();
-				
-				while(iter.hasNext()){
-					String stockinfo = iter.next();
-					String code = stockinfo.substring(1, 7);  
-					GetStockRealData.getStockData(code,todayDate,todayDate);
-				}
-			  
-			}
-			try {
-				System.out.println("----------------当天真实数据爬取完成------------------");
-				Thread.sleep(24*60*60*1000-60*1000);
-				GetStockRealData.DeleteFolder(suspendstockpath);
-				GetStockRealData.DeleteFolder(stopstockpath);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+//		while(true){
+//			System.out.println("----------------开始爬取今天数据------------------");
+//			Date date = new Date();
+//			if (date.getDay() != 0 &&date.getDay() != 6){
+//				SimpleDateFormat timedf = new SimpleDateFormat("yyyyMMdd");//设置日期格式
+//				String todayDate = timedf.format(new Date());
+////		     	System.out.println(todayDate);
+//				
+//				Set<String> sadd = AllStockCode.GetAllStockcode();
+//				Iterator<String> iter = sadd.iterator();
+//				
+//				while(iter.hasNext()){
+//					String stockinfo = iter.next();
+//					String code = stockinfo.substring(1, 7);  
+//					GetStockRealData.getStockData(code,todayDate,todayDate);
+//				}
+//			  
+//			}
+//			try {
+//				System.out.println("----------------当天真实数据爬取完成------------------");
+//				Thread.sleep(24*60*60*1000-60*1000);
+//				GetStockRealData.DeleteFolder(suspendstockpath);
+//				GetStockRealData.DeleteFolder(stopstockpath);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
 	}
 	
+	public GetStockRealData(String code) {
+		this.code = code;
+	}
+
 	public static void getStockData(String code, String fromDate,String toDate) {
 	 	Stockdata data = GetDataFromJson(code, fromDate, toDate);
 	 	if(data==null)
@@ -176,6 +182,7 @@ public class GetStockRealData implements Runnable{
 	}
 	
 	public  static void main(String[] args) {
-		new Thread(new GetStockRealData()).start();
+		DBControl.init("xueqiu");
+		new Thread(new GetStockRealData("002024")).start();
 	}
 }

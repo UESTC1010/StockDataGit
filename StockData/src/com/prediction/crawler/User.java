@@ -1,3 +1,4 @@
+package com.prediction.crawler;
 
 public class User {
 	String id;

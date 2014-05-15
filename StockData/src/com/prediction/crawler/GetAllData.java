@@ -1,3 +1,4 @@
+package com.prediction.crawler;
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.Iterator;

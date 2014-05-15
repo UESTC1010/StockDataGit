@@ -1,54 +1,78 @@
+package com.prediction.semantic;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.text.html.HTMLDocument.Iterator;
 
 import org.neuroph.core.NeuralNetwork;
 import org.neuroph.core.learning.SupervisedTrainingElement;
 import org.neuroph.core.learning.TrainingSet;
 import org.neuroph.nnet.MultiLayerPerceptron;
 import org.neuroph.nnet.learning.BackPropagation;
-import org.neuroph.nnet.learning.MomentumBackpropagation;
 import org.neuroph.util.TransferFunctionType;
+
+import com.prediction.crawler.DBControl;
+
 
 
 
 public class NNTrain {
+	public static HashMap<String, Double> ss = new HashMap<String, Double>();
+	private static final Double[] score = new Double[]{-1.0,-1.0,0.5,1.0,1.5,1.75,2.0};
+	private static final String path = "C:/Users/rushshi/Desktop/word/";
+	private static final String[] fileName = new String[]{
+		path+"privative.txt",
+		path+"negative.txt",
+		path+"adv0.5.txt",
+		path+"positive.txt",
+		path+"adv1.5.txt",
+		path+"adv1.75.txt",
+		path+"adv2.txt"
+	};
 	NeuralNetwork neuralNet;
 	TrainingSet<SupervisedTrainingElement> trainingSet;
 	TrainingSet<SupervisedTrainingElement> testingSet;
-	static int inputnum = 125;
+	static int inputnum = 65;
 	static String[] keyword = new String[inputnum];
 	static DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
-	private static void loadKW(String fileName) {
-		File file = new File(fileName);
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(file));
-            String tempString = null;
-            int i = 0;
-            while ((tempString = reader.readLine()) != null) {
-            	keyword[i] = tempString;
-            	i++;
-            }
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
+	private static HashMap<String,Double> loadKWMap() {
+		HashMap<String,Double> kwmap = new HashMap<String, Double>();
+		int i = 0;
+		for(String filename:fileName){
+			File file = new File(filename);
+			BufferedReader reader = null; 
+			try {
+				reader = new BufferedReader(new FileReader(file));
+				String tempString = null;
+				while ((tempString = reader.readLine()) != null) {
+					kwmap.put(tempString, score[i]);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e1) {
                 }
-            }
-        }
+				}
+			}
+			i++;
+		}
+		return kwmap;
 	}
 	
 	private double[] handleText(String text) {
@@ -58,7 +82,7 @@ public class NNTrain {
 			Map wordfrenmap = WordFren.getTextDef(text);
 			for(int i = 0; i<inputnum ; i++){
 				if(wordfrenmap.containsKey(keyword[i]))
-					x[i] = 1;
+					x[i] = ((Integer)wordfrenmap.get(keyword[i])).doubleValue();
 				else 
 					x[i] = 0;
 			}
@@ -82,21 +106,42 @@ public class NNTrain {
 	}
 	
 	public TrainingSet<SupervisedTrainingElement> getdataset(String code, Date start, Date end){
-		TrainingSet<SupervisedTrainingElement> trainingSet = new TrainingSet<SupervisedTrainingElement>(125, 1);
+		TrainingSet<SupervisedTrainingElement> trainingSet = new TrainingSet<SupervisedTrainingElement>(65, 1);
 		Date tempday = start;
 		Date nextday = start;
 		do{
 			tempday = nextday;
 			nextday = nextday(tempday);
 			double[] inputX = getInputX(code,tempday,nextday);
+//			int x=0;
+//			for(double i:inputX){
+//				if(i == 1) x++;
+//			}
 			double inputy = getInputY(code, nextday);
 			if(inputy != 2){
 				double[] inputY = new double[]{inputy};
 				trainingSet.addElement(new SupervisedTrainingElement(inputX, inputY));
+				writetotxt(inputX,inputY);
 			}
 		}while(nextday.before(end));
 		return trainingSet;	
 	}
+	
+	private void writetotxt(double[] inputX, double[] inputY) {
+		File file = new File("C:/Users/rushshi/Desktop/X.txt");
+		try {
+			FileWriter fileWriter=new FileWriter(file,true);
+			for(double i:inputX){
+				fileWriter.write(i+" ");
+			}
+			fileWriter.write(inputY[0]+"\r\n");
+			fileWriter.flush();
+			fileWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public Date nextday(Date date){
 		Date nextday = new Date();
 		Calendar cal = Calendar.getInstance();
@@ -106,11 +151,11 @@ public class NNTrain {
 		return nextday;
 	}
 	public void nntrain(String code, Date start, Date end){
-		neuralNet = new MultiLayerPerceptron(TransferFunctionType.TANH, inputnum, 4,1);
+		neuralNet = new MultiLayerPerceptron(TransferFunctionType.TANH, inputnum, 3,1);
 		BackPropagation learningRule = (BackPropagation) neuralNet
 				.getLearningRule();
 		learningRule.setLearningRate(0.3);
-		learningRule.setMaxError(0.1);
+		learningRule.setMaxError(0.01);
 
 		// create training set
 		trainingSet = getdataset(code,start, end);
@@ -143,24 +188,20 @@ public class NNTrain {
 	}
 	public static void main(String args[]){
 		DBControl.init("xueqiu");
-		NNTrain nn = new NNTrain();
+//		NNTrain nn = new NNTrain();
+//		
+		ss =loadKWMap();
 		
-		String KWpath = "C://Users//rushshi//Desktop//dic.txt"; 
-		loadKW(KWpath);
-//		System.out.println(NNTrain.keyword.length);
-//		for(String n:keyword){
-//			System.out.println(n);}
 		
 		try {
-			Date start = format.parse("2014-01-01 00:00:00");
-			Date end = format.parse("2014-03-23 00:00:00");
-//			System.out.println(start);
-//			System.out.println(end);
-//			double[] i = nn.getInputX("SZ300027",start,end);
-//			for(double x:i){
-//				System.out.println(x);}
-			nn.nntrain("SZ300027", start, end);
-			nn.testvalidate();
+			Date start = format.parse("2013-09-20 00:00:00");
+			Date end = format.parse("2014-05-10 00:00:00");
+			ArrayList<Double> scoreList = AnalysizeText.getSentiment("SZ002024", start, 35);
+			java.util.Iterator<Double> it = scoreList.iterator();
+			while(it.hasNext()){
+				System.out.println(it.next());
+			}
+//			TopicofOneday.getAllTopics("SZ300027", start, end);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
