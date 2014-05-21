@@ -1,4 +1,4 @@
-package com.prediction.semantic;
+package com.prediction.training;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,6 +24,8 @@ import org.neuroph.nnet.learning.BackPropagation;
 import org.neuroph.util.TransferFunctionType;
 
 import com.prediction.crawler.DBControl;
+import com.prediction.semantic.AnalysizeText;
+import com.prediction.semantic.WordFren;
 
 
 
@@ -48,7 +50,7 @@ public class NNTrain {
 	static String[] keyword = new String[inputnum];
 	static DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
-	private static HashMap<String,Double> loadKWMap() {
+	public static HashMap<String,Double> loadKWMap() {
 		HashMap<String,Double> kwmap = new HashMap<String, Double>();
 		int i = 0;
 		for(String filename:fileName){
@@ -192,11 +194,19 @@ public class NNTrain {
 //		
 		ss =loadKWMap();
 		
-		
+		System.out.println(ss.size());
+//		java.util.Iterator<String> it = ss.keySet().iterator();
+//		while(it.hasNext()){
+//			System.out.println(it.next());
+//		}
+//		if(ss.containsKey("¿√")){
+//			System.out.println("hanyoulan");
+//		}
+
 		try {
-			Date start = format.parse("2013-09-20 00:00:00");
+			Date start = format.parse("2014-05-05 00:00:00");
 			Date end = format.parse("2014-05-10 00:00:00");
-			ArrayList<Double> scoreList = AnalysizeText.getSentiment("SZ002024", start, 35);
+			ArrayList<Double> scoreList = AnalysizeText.getSentiment("SZ002024", start, 10);
 			java.util.Iterator<Double> it = scoreList.iterator();
 			while(it.hasNext()){
 				System.out.println(it.next());

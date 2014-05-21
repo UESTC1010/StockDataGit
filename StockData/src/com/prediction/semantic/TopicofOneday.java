@@ -26,7 +26,7 @@ public class TopicofOneday {
 	}
 	private static String DeleteNoise(String text) {
 		//delete some link.
-		String noHtmlContent = text.replaceAll("<[^>]*>","").replaceAll("&nbsp", "");
+		String noHtmlContent = text.replaceAll("<[^>]*>","").replaceAll("&nbsp", "").replaceAll("\\$.*\\$", "");
 		//do more about noise.
 		//
 		return noHtmlContent;

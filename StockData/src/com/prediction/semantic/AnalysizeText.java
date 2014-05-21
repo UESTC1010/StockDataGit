@@ -1,5 +1,8 @@
 package com.prediction.semantic;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -8,6 +11,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.prediction.training.NNTrain;
 
 public class AnalysizeText {
 	//*
@@ -34,6 +39,7 @@ public class AnalysizeText {
 				}
 				allscore+=wholeclauseScore;
 //				System.out.println(wholeclauseScore+"------" + textlist.get(i));
+				writefile("C:/Users/rushshi/Desktop/score1.txt",wholeclauseScore+"------" + textlist.get(i));
 			}
 			//compute sentiment of one day
 			Double onedayScore = allscore/textlist.size();
@@ -42,6 +48,17 @@ public class AnalysizeText {
 		return textlistScore;
 	}
 	
+	public static void writefile(String pathname, String jj){
+		File log = new File(pathname);
+		try {
+			FileWriter fileWriter=new FileWriter(log,true);
+			fileWriter.write(jj+"\r\n");
+			fileWriter.flush();
+			fileWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	private static Double getClauseSroce(ArrayList<String> wordlist) {
 		Iterator<String> it = wordlist.iterator();
 		LinkedList<Double> clauseSroceVec = new LinkedList<Double>();
@@ -90,6 +107,7 @@ public class AnalysizeText {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date); 
 		cal.add(Calendar.DAY_OF_YEAR, 1);
+		cal.add(Calendar.HOUR_OF_DAY, 9);
 		nextday = cal.getTime(); 
 		return nextday;
 	}

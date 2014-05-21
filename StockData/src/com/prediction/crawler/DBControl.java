@@ -9,6 +9,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+import com.prediction.semantic.AnalysizeText;
 
 
 public class DBControl {
@@ -84,21 +85,42 @@ public class DBControl {
 		return noHtmlContent;
 	}
 
-	public static double GetZhangfu(String code, Date start) {
+	public static Double GetZhangfu(String code, Date start) {
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("_id", start);
-		DBCursor cursor = db.getCollection(code).find(keys);
-		while(cursor.hasNext()){
-			double zhengfu = Double.valueOf((String)cursor.next().get("zhengfu"));
-			if(zhengfu<-0.3)
-				return -1;
-			else if(zhengfu>0.3)
-				return 1;
-			else
-				return 0;
-//			return zhengfu;
+		DBObject DBobj = db.getCollection(code).findOne(keys);
+		if(DBobj != null){
+			double zhengfu = Double.valueOf((String)DBobj.get("shoupan"));
+//			if(zhengfu<-0.3)
+//				return -1;
+//			else if(zhengfu>0.3)
+//				return 1;
+//			else
+//				return 0;
+			return zhengfu;
 		}
-		return 2;
+		else
+			return null;
+	}
+
+	public static double[] GetFeatureFromDB(String code, Date start) {
+		double[] feature = new double[7];
+		
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("_id", start);
+		DBObject data = db.getCollection(code).findOne(keys);
+		if(data != null){
+			feature[0] = Double.valueOf((String) data.get("kaipan"));
+			feature[1] = Double.valueOf((String) data.get("shoupan"));
+			feature[2] = Double.valueOf(((String) data.get("zhangfu")).replace("%", ""));
+			feature[3] = Double.valueOf((String) data.get("zongshou"));
+			feature[4] = Double.valueOf((String) data.get("zhengfu"));
+			feature[5] = Double.valueOf(((String) data.get("huanshou")).replace("%", ""));
+			feature[6] = AnalysizeText.getSentiment(code, start, 1).get(0);
+			return feature;
+		}
+		else
+			return null;
 	}
 
 	
