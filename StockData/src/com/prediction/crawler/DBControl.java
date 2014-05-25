@@ -90,7 +90,7 @@ public class DBControl {
 		keys.put("_id", start);
 		DBObject DBobj = db.getCollection(code).findOne(keys);
 		if(DBobj != null){
-			double zhengfu = Double.valueOf((String)DBobj.get("shoupan"));
+			double zhengfu = Double.valueOf(((String)DBobj.get("zhangfu")).replaceAll("%", ""));
 //			if(zhengfu<-0.3)
 //				return -1;
 //			else if(zhengfu>0.3)

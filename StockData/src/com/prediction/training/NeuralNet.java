@@ -25,7 +25,7 @@ public class NeuralNet {
 	public static void main(String[] args){
 		DBControl.init("xueqiu");
 		NNTrain.ss = NNTrain.loadKWMap();
-		
+//		
 		Date start = null;
 		Date end = null;
 		try {
@@ -35,11 +35,12 @@ public class NeuralNet {
 			e.printStackTrace();
 		}
 		
-		NeuralNetwork neuralNet = new MultiLayerPerceptron(7, 10,1);
+		NeuralNetwork neuralNet = new MultiLayerPerceptron(TransferFunctionType.TANH,7, 10,1);
 		BackPropagation learningRule = (BackPropagation) neuralNet
 				.getLearningRule();
 		learningRule.setLearningRate(0.3);
 		learningRule.setMaxError(0.1);
+		learningRule.setMaxIterations(1000);
 
 		// create training set
 		TrainingSet<SupervisedTrainingElement> trainingSet = FeatureSelect.getdataset("SZ002024",start, end);
@@ -61,18 +62,18 @@ public class NeuralNet {
 		Date end = null;
 		try {
 			start = format.parse("2014-05-01 00:00:00");
-			end  = format.parse("2014-05-19 00:00:00");
+			end  = format.parse("2014-05-14 00:00:00");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		TrainingSet<SupervisedTrainingElement> trainingSet = FeatureSelect.getdataset("SZ002024",start, end);
-		trainingSet.normalize();
+		trainingSet.normalize(new MaxMinNormalizer());
 		Iterator<SupervisedTrainingElement> it = trainingSet.iterator();
 		while(it.hasNext()){
 			neuralNetwork.setInput(it.next().getInput());
 			neuralNetwork.calculate();
 			double[] networkOutput = neuralNetwork.getOutput();
-			System.out.println("trainresult = "+networkOutput[0]+" realdata = "+it.next().getLabel());
+			System.out.println("trainresult = "+networkOutput[0]);
 		}
 	}
 }
