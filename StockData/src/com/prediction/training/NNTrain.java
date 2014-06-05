@@ -27,9 +27,6 @@ import com.prediction.crawler.DBControl;
 import com.prediction.semantic.AnalysizeText;
 import com.prediction.semantic.WordFren;
 
-
-
-
 public class NNTrain {
 	public static HashMap<String, Double> ss = new HashMap<String, Double>();
 	private static final Double[] score = new Double[]{-1.0,-1.0,0.5,1.0,1.5,1.75,2.0};
@@ -177,7 +174,7 @@ public class NNTrain {
 			Date tempdate = nextday;
 			nextday = nextday(tempdate);
 			
-			double[] inputx = getInputX("SZ300027",start, nextday);
+			double[] inputx = getInputX("SH600756",start, nextday);
 			// set network input
 			neuralNetwork.setInput(inputx);
 			// calculate network
@@ -204,9 +201,9 @@ public class NNTrain {
 //		}
 
 		try {
-			Date start = format.parse("2014-05-05 00:00:00");
+			Date start = format.parse("2014-05-01 00:00:00");
 			Date end = format.parse("2014-05-10 00:00:00");
-			ArrayList<Double> scoreList = AnalysizeText.getSentiment("SZ002024", start, 10);
+			ArrayList<Double> scoreList = AnalysizeText.getSentiment("SH600756", start, 10);
 			java.util.Iterator<Double> it = scoreList.iterator();
 			while(it.hasNext()){
 				System.out.println(it.next());

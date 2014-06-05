@@ -29,8 +29,8 @@ public class NeuralNet {
 		Date start = null;
 		Date end = null;
 		try {
-			start = format.parse("2014-04-15 00:00:00");
-			end  = format.parse("2014-04-29 00:00:00");
+			start = format.parse("2014-05-10 00:00:00");
+			end  = format.parse("2014-05-28 00:00:00");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -43,7 +43,7 @@ public class NeuralNet {
 		learningRule.setMaxIterations(1000);
 
 		// create training set
-		TrainingSet<SupervisedTrainingElement> trainingSet = FeatureSelect.getdataset("SZ002024",start, end);
+		TrainingSet<SupervisedTrainingElement> trainingSet = FeatureSelect.getdataset("SH600756",start, end);
 		trainingSet.normalize(new MaxMinNormalizer());
 		for (TrainingElement trainingElement : trainingSet.elements()) {
 			FeatureSelect.writetotxt(trainingElement.getInput(),new double[]{1});
@@ -61,12 +61,12 @@ public class NeuralNet {
 		Date start = null;
 		Date end = null;
 		try {
-			start = format.parse("2014-05-01 00:00:00");
-			end  = format.parse("2014-05-14 00:00:00");
+			start = format.parse("2014-05-10 00:00:00");
+			end  = format.parse("2014-05-28 00:00:00");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		TrainingSet<SupervisedTrainingElement> trainingSet = FeatureSelect.getdataset("SZ002024",start, end);
+		TrainingSet<SupervisedTrainingElement> trainingSet = FeatureSelect.getdataset("SH600756",start, end);
 		trainingSet.normalize(new MaxMinNormalizer());
 		Iterator<SupervisedTrainingElement> it = trainingSet.iterator();
 		while(it.hasNext()){

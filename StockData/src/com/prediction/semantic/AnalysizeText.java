@@ -32,6 +32,7 @@ public class AnalysizeText {
 			for(int i=0; i<textlist.size(); i++){
 				Double wholeclauseScore = 0.0;
 				String[] textclause = textlist.get(i).split("¡£|£¬|£»");
+				if(textclause.length<10){
 				// loop for grading all clauses of one text
 				for(int j=0;j<textclause.length;j++){
 					ArrayList<String> wordlist = WordFren.getWordList(textclause[j]);
@@ -39,7 +40,7 @@ public class AnalysizeText {
 				}
 				allscore+=wholeclauseScore;
 //				System.out.println(wholeclauseScore+"------" + textlist.get(i));
-				writefile("C:/Users/rushshi/Desktop/score1.txt",wholeclauseScore+"------" + textlist.get(i));
+				writefile("C:/Users/rushshi/Desktop/score1.txt",wholeclauseScore+"------" + textlist.get(i));}
 			}
 			//compute sentiment of one day
 			Double onedayScore = allscore/textlist.size();

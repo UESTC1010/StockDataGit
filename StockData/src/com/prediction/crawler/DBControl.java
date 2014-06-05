@@ -19,7 +19,7 @@ public class DBControl {
 	public static DB db = null;
 	public static void init(String dbname) {
 		try {
-			mongo = new Mongo("192.168.1.107",27017);
+			mongo = new Mongo("192.168.1.109",27017);
 //			mongo = new Mongo();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
