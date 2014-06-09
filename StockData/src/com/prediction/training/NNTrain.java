@@ -29,7 +29,7 @@ import com.prediction.semantic.WordFren;
 
 public class NNTrain {
 	public static HashMap<String, Double> ss = new HashMap<String, Double>();
-	private static final Double[] score = new Double[]{-1.0,-1.0,0.5,1.0,1.5,1.75,2.0};
+	private static final Double[] score = new Double[]{-1.0,-1.1,0.5,1.0,1.5,1.75,2.0};
 	private static final String path = "C:/Users/rushshi/Desktop/word/";
 	private static final String[] fileName = new String[]{
 		path+"privative.txt",

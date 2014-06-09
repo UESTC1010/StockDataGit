@@ -20,42 +20,18 @@ public class FeatureSelect {
 		Date nextday = start;
 		do{
 			tempday = nextday;
-			nextday = nextday(tempday);
+			nextday = Tool.nextday(tempday);
+			//获取input向量
 			double[] feature = FeatureSelect.getFeature(code,tempday);
-//			int x=0;
-//			for(double i:inputX){
-//				if(i == 1) x++;
-//			}
+			//获取output向量
 			Double label = getLabel(code, nextday);
 			if(feature!=null && label != null){
 				double[] Label = new double[]{label};
 				trainingSet.addElement(new SupervisedTrainingElement(feature, Label));
-				FeatureSelect.writetotxt(feature,Label);
+				Tool.writetotxt("C:/Users/rushshi/Desktop/X.txt",feature,Label);
 			}
 		}while(nextday.before(end));
 		return trainingSet;	
-	}
-	public  static void writetotxt(double[] inputX, double[] inputY) {
-		File file = new File("C:/Users/rushshi/Desktop/X.txt");
-		try {
-			FileWriter fileWriter=new FileWriter(file,true);
-			for(double i:inputX){
-				fileWriter.write(i+" ");
-			}
-			fileWriter.write(inputY[0]+"\r\n");
-			fileWriter.flush();
-			fileWriter.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	public static Date nextday(Date date){
-		Date nextday = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date); 
-		cal.add(Calendar.DAY_OF_YEAR, 1);
-		nextday = cal.getTime(); 
-		return nextday;
 	}
 	
 	public static double[] getFeature(String code, Date start){

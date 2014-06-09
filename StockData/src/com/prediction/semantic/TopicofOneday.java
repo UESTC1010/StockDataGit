@@ -21,7 +21,7 @@ public class TopicofOneday {
 			//save one topic to list.
 			strlist.add( new String(text) );
 		}
-		System.out.println(x);
+		//System.out.println(x);
 		return strlist;
 	}
 	private static String DeleteNoise(String text) {

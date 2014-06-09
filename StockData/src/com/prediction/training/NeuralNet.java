@@ -1,10 +1,7 @@
 package com.prediction.training;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import org.neuroph.core.NeuralNetwork;
@@ -15,12 +12,10 @@ import org.neuroph.nnet.MultiLayerPerceptron;
 import org.neuroph.nnet.learning.BackPropagation;
 import org.neuroph.util.TransferFunctionType;
 import org.neuroph.util.norm.MaxMinNormalizer;
-import org.neuroph.util.norm.Normalizer;
 
 import com.prediction.crawler.DBControl;
 
 public class NeuralNet {
-	static DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	public static void main(String[] args){
 		DBControl.init("xueqiu");
@@ -29,12 +24,13 @@ public class NeuralNet {
 		Date start = null;
 		Date end = null;
 		try {
-			start = format.parse("2014-05-10 00:00:00");
-			end  = format.parse("2014-05-28 00:00:00");
+			start = Tool.format.parse("2014-04-01 00:00:00");
+			end  = Tool.format.parse("2014-05-01 00:00:00");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		
+		//tanh函数（-1，1），7个 input feature，10个中间层节点，1个output节点 
 		NeuralNetwork neuralNet = new MultiLayerPerceptron(TransferFunctionType.TANH,7, 10,1);
 		BackPropagation learningRule = (BackPropagation) neuralNet
 				.getLearningRule();
@@ -43,16 +39,16 @@ public class NeuralNet {
 		learningRule.setMaxIterations(1000);
 
 		// create training set
-		TrainingSet<SupervisedTrainingElement> trainingSet = FeatureSelect.getdataset("SH600756",start, end);
+		TrainingSet<SupervisedTrainingElement> trainingSet = FeatureSelect.getdataset("SH600887",start, end);
 		trainingSet.normalize(new MaxMinNormalizer());
 		for (TrainingElement trainingElement : trainingSet.elements()) {
-			FeatureSelect.writetotxt(trainingElement.getInput(),new double[]{1});
+//			Tool.writetotxt("C:/Users/rushshi/Desktop/X.txt",trainingElement.getInput(),new double[]{1});
 		}
 		System.out.println("--------------------get the training data------------------");
 		// train the network with training set
-		neuralNet.learn(trainingSet);
-		neuralNet.save("or_perceptron.nnet");
-		NeuralNet.testvalidate();
+//		neuralNet.learn(trainingSet);
+//		neuralNet.save("or_perceptron.nnet");
+//		NeuralNet.testvalidate();
 	}
 	
 	public static void testvalidate(){
@@ -61,8 +57,8 @@ public class NeuralNet {
 		Date start = null;
 		Date end = null;
 		try {
-			start = format.parse("2014-05-10 00:00:00");
-			end  = format.parse("2014-05-28 00:00:00");
+			start = Tool.format.parse("2014-05-10 00:00:00");
+			end  = Tool.format.parse("2014-05-28 00:00:00");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
