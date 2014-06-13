@@ -18,7 +18,7 @@ public class TapeAnalysis {
 		DBControl.init("xueqiu");
 		NNTrain.ss = NNTrain.loadKWMap();
 		Date start = Tool.format.parse("2014-02-06 00:00:00");
-		int period = 50;
+		int period = 100;
 		int stocknum=0;
 		double[] sum = new double[period];
 		for(int i=0;i<period;i++)

@@ -53,8 +53,7 @@ public class Tool {
 					float sum = TapeAnalysis.num.get(i)[2];
 					fileWriter.write(nextday +"  "+ df.format(x[i])+"   "+pos+"   "
 						+ neg +"   " + sum + "   " + pos/(pos+neg) + "\r\n");
-				}
-					
+				}					
 			}
 			fileWriter.flush();
 			fileWriter.close();

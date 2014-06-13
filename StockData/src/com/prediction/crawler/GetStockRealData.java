@@ -33,7 +33,7 @@ public class GetStockRealData implements Runnable{
 //			String stockinfo = it.next();
 //			String code = stockinfo.substring(1, 7);  
 //			System.out.println(code);
-			GetStockRealData.getStockData(code, "20140501", "20140511");
+			GetStockRealData.getStockData(code, "20130101", "20140611");
 //		}
 		
 //		while(true){
@@ -183,6 +183,6 @@ public class GetStockRealData implements Runnable{
 	
 	public  static void main(String[] args) {
 		DBControl.init("xueqiu");
-		new Thread(new GetStockRealData("002024")).start();
+		new Thread(new GetStockRealData("000001")).start();
 	}
 }
