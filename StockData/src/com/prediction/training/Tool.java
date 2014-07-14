@@ -10,8 +10,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Tool {
-	static DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	static DecimalFormat df = new DecimalFormat("000.00");
+	public static DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	public static DecimalFormat df = new DecimalFormat("000.00");
 	public  static void writetotxt(String txtpath,double[] inputX, double[] inputY) {
 		File file = new File(txtpath);
 		try {

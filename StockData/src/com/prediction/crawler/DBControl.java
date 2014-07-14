@@ -1,5 +1,6 @@
 package com.prediction.crawler;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.google.code.morphia.Datastore;
@@ -123,5 +124,19 @@ public class DBControl {
 			return null;
 	}
 
-	
+	public static ArrayList<String> GetTextArray(String code, Date start, Date end) {
+		ArrayList<String> arraytext = new ArrayList<String>();
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("created_at", new BasicDBObject("$gte", start).append("$lte", end));
+		DBCursor cursor = db.getCollection(code).find(keys);
+		long x = db.getCollection(code).count(keys);		
+
+		while(cursor.hasNext()){
+				String text = DeleteNoise(String.valueOf(cursor.next().get("text")));
+				if(text.length()>50)
+					arraytext.add(text);
+		}
+		System.out.println(x);
+		return arraytext;
+	}
 }
