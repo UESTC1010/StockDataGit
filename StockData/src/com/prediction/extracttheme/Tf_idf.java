@@ -2,8 +2,11 @@ package com.prediction.extracttheme;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -32,10 +35,11 @@ public class Tf_idf {
         HashMap<String, Integer> intTF = normalTF(wordlist);
         
         int wordcount = wordlist.size();
-        Iterator<Entry<String, Integer>>  iter = intTF.entrySet().iterator(); //iterator for that get from TF
+        //iterator for that get from TF
+        Iterator<Entry<String, Integer>>  iter = intTF.entrySet().iterator(); 
         while(iter.hasNext()){
         	Entry<String, Integer> entry = iter.next();
-            resTF.put(entry.getKey().toString(), Float.parseFloat(entry.getValue().toString()) / wordcount);
+            resTF.put(entry.getKey().toString(), Float.parseFloat(entry.getValue().toString())/wordcount);
 //            System.out.println(entry.getKey().toString() + " = "+  Float.parseFloat(entry.getValue().toString()) / wordcount);
         }
         return resTF;
@@ -106,12 +110,22 @@ public class Tf_idf {
     
     //print tf_idf value
     public static void DisTfIdf(HashMap<Integer, HashMap<String, Float>> tfidf){
-        //to do
-    	HashMap<String, Float> tf_idf = tfidf.get(78);
-    	Iterator iter = tf_idf.entrySet().iterator();
-        while(iter.hasNext()){
-            Map.Entry entry = (Map.Entry)iter.next(); 
-            System.out.print(entry.getKey().toString() + " = " + entry.getValue().toString() + ", ");
-        }
+    	for(int i = tfidf.size()-1; i< tfidf.size(); i++){
+    		List<Map.Entry<String, Float>> tf_idf = new ArrayList<Map.Entry<String,Float>>(tfidf.get(i).entrySet());
+    		Collections.sort(tf_idf, new Comparator<Map.Entry<String, Float>>() {   
+    		    public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2) {      
+    		    	if((o2.getValue() - o1.getValue()) > 0){
+    		    		return 1;
+    		    	}
+    		    	else
+    		    		return -1;
+    		    }
+    		}); 
+    		for (int j = 0; j < 20; j++) {
+    			Map.Entry entry = tf_idf.get(j); 
+    			System.out.print(i+entry.getKey().toString() + " = " + entry.getValue().toString() + ", ");
+    		}
+    		System.out.println(" ");
+    	}
     }
 }

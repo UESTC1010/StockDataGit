@@ -6,12 +6,18 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 public class Tool {
 	public static DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	public static DecimalFormat df = new DecimalFormat("000.00");
+	
+	public static void main(String[] args){
+	}
+	
+	//write topic to txt
 	public  static void writetotxt(String txtpath,double[] inputX, double[] inputY) {
 		File file = new File(txtpath);
 		try {
@@ -28,7 +34,21 @@ public class Tool {
 		}
 	}
 	
-	public static void main(String[] args){
+	public static void writetotxt(String txtpath, ArrayList<String> topics){
+		File file = new File(txtpath);
+		try {
+			FileWriter fileWriter=new FileWriter(file,true);
+			int i = 0;
+			for(String s:topics){
+				fileWriter.write(i+"."+s+"\r\n");
+				i++;
+			}
+			
+			fileWriter.flush();
+			fileWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public  static void writetotxt(String txtpath,double[] x, Date date) {

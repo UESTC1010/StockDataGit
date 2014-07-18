@@ -16,51 +16,28 @@ import com.prediction.training.Tool;
 
 public class Extractkeyword {
 	
-	//return topic_txt from MongDB
-	public static String GetTopicTxt(String code) throws ParseException{
-		Date start;
-		Date end;
-		start = Tool.format.parse("2014-07-01 00:00:00");
-		end = Tool.format.parse("2014-07-10 00:00:00");
-		String alltext = DBControl.GetText(code, start, end);
-		return alltext;
-	}
-	
 	//return topic_txt array
-	public static ArrayList<String> GetTopicTxtArray(String code) throws ParseException{
+	public static ArrayList<String> GetTopicTxtArray(String code,Date start,int interval) throws ParseException{
 		ArrayList<String> txtarray = new ArrayList<String>();
-		Date start;
-		Date end;
-		start = Tool.format.parse("2014-07-01 00:00:00");
-		end = Tool.format.parse("2014-07-10 00:00:00");
-		txtarray = DBControl.GetTextArray(code, start, end);
+		txtarray = DBControl.GetTextArray(code, start, Tool.addday(start, interval));
 		return txtarray;
 	}
 	
+	
+	
 	public static void main(String[] args) throws IOException, ParseException {
 		DBControl.init("xueqiu");
-		ArrayList<String> txtarray = GetTopicTxtArray("SZ002024");
-		
-		File file = new File("C:\\Users\\rushshi\\Desktop\\topictxt\\2024.txt");
-		try {
-			FileWriter fileWriter=new FileWriter(file,true);
-			int i = 0;
-			for(String s:txtarray){
-				fileWriter.write(i+"."+s+"\r\n");
-				i++;
-			}
-			
-			fileWriter.flush();
-			fileWriter.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		String code = "SZ002024";
+//		Tool.writetotxt("C:\\Users\\rushshi\\Desktop\\topictxt\\2024.txt",txtarray);
+		for(int i=9;i<10;i++){
+			Date start = Tool.format.parse("2014-06-10 00:00:00");
+			ArrayList<String> txtarray = GetTopicTxtArray(code,start, 26);
+			txtarray.add(DBControl.GetText(code, Tool.addday(start, 26),  Tool.addday(start, 33)));
+			HashMap<Integer, HashMap<String, Float>>  alltf = Tf_idf.tfOfAllTopics(txtarray);
+			System.out.println("all tf have got");
+			HashMap<String, Float> idfs = Tf_idf.idf(alltf);
+			Tf_idf.tf_idf(alltf, idfs);
 		}
-		
-		System.out.println(txtarray.size() + " valid txts");
-		HashMap<Integer, HashMap<String, Float>>  alltf = Tf_idf.tfOfAllTopics(txtarray);
-		System.out.println("all tf got");
-		HashMap<String, Float> idfs = Tf_idf.idf(alltf);
-		Tf_idf.tf_idf(alltf, idfs);
 	}
 
 }

@@ -81,8 +81,27 @@ public class DBControl {
 		return alltext;
 	}
 
+	public static ArrayList<String> GetTextArray(String code, Date start, Date end) {
+		ArrayList<String> arraytext = new ArrayList<String>();
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("created_at", new BasicDBObject("$gte", start).append("$lte", end));
+		DBCursor cursor = db.getCollection(code).find(keys);
+		int i = 0;		
+
+		while(cursor.hasNext()){
+				String text = DeleteNoise(String.valueOf(cursor.next().get("text")));
+				if(text.length()>20){
+					arraytext.add(text);i++;
+				}
+					
+		}
+		System.out.println(i);
+		return arraytext;
+	}
+	
 	private static String DeleteNoise(String text) {
-		String noHtmlContent = text.replaceAll("<[^>]*>","").replaceAll("&nbsp", "");
+		String noHtmlContent = text.replaceAll("<[^>]*>","").replaceAll("&nbsp", "")
+					.replaceAll("\\$.*\\$", "").replaceAll("»Ø¸´@.*?:", "").replaceAll("//@.*?:»Ø¸´@.*?:.*", "");
 		return noHtmlContent;
 	}
 
@@ -124,19 +143,4 @@ public class DBControl {
 			return null;
 	}
 
-	public static ArrayList<String> GetTextArray(String code, Date start, Date end) {
-		ArrayList<String> arraytext = new ArrayList<String>();
-		BasicDBObject keys = new BasicDBObject();
-		keys.put("created_at", new BasicDBObject("$gte", start).append("$lte", end));
-		DBCursor cursor = db.getCollection(code).find(keys);
-		long x = db.getCollection(code).count(keys);		
-
-		while(cursor.hasNext()){
-				String text = DeleteNoise(String.valueOf(cursor.next().get("text")));
-				if(text.length()>50)
-					arraytext.add(text);
-		}
-		System.out.println(x);
-		return arraytext;
-	}
 }

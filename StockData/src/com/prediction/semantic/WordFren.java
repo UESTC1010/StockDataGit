@@ -76,20 +76,10 @@ public class WordFren {
 	
 	
 	public static void main(String[] args) {
-//		DBControl db = new DBControl();
-//		String text =  DBControl.GetText("SZ300027");
-//		try {
-//			int topWordsCount=400;
-//			Map wordsFrenMaps = WordFren.getTextDef(text);
-//			WordFren.sortSegmentResult(wordsFrenMaps, topWordsCount);
-//			System.out.println(WordFren.findUniqueWord(wordsFrenMaps, "涨"));
-//			System.out.println(WordFren.findUniqueWord(wordsFrenMaps, "跌"));
-////			System.out.println(WordFren.findUniqueWord(wordsFrenMaps, ""));
-//			System.out.println(WordFren.findUniqueWord(wordsFrenMaps, "有望"));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-		WordFren.getWordList("目测不会涨很久");
+		ArrayList<String> array = WordFren.getWordList("简单说说今天参加苏宁众包大会的观感吧");
+		for(String txt:array){
+			System.out.println(txt);
+		}
 	}
 
 	public static ArrayList<String> getWordList(String string) {
