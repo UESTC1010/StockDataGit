@@ -51,6 +51,18 @@ public class Tool {
 		}
 	}
 	
+	public static void writetotxt(String txtpath, String topic){
+		File file = new File(txtpath);
+		try {
+			FileWriter fileWriter=new FileWriter(file,true);
+			fileWriter.write("----"+topic+"\r\n");
+			fileWriter.flush();
+			fileWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public  static void writetotxt(String txtpath,double[] x, Date date) {
 		File file = new File(txtpath);
 		try {

@@ -121,7 +121,7 @@ public class Tf_idf {
     		    		return -1;
     		    }
     		}); 
-    		for (int j = 0; j < 20; j++) {
+    		for (int j = 0; j < 50; j++) {
     			Map.Entry entry = tf_idf.get(j); 
     			System.out.print(i+entry.getKey().toString() + " = " + entry.getValue().toString() + ", ");
     		}

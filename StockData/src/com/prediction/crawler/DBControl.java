@@ -11,6 +11,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.prediction.semantic.AnalysizeText;
+import com.prediction.training.Tool;
 
 
 public class DBControl {
@@ -75,6 +76,7 @@ public class DBControl {
 
 		while(cursor.hasNext()){
 				String text = DeleteNoise(String.valueOf(cursor.next().get("text")));
+				Tool.writetotxt("C:\\Users\\rushshi\\Desktop\\topictxt\\2024.txt", text);
 				alltext += text;
 		}
 		System.out.println(x);
@@ -90,7 +92,8 @@ public class DBControl {
 
 		while(cursor.hasNext()){
 				String text = DeleteNoise(String.valueOf(cursor.next().get("text")));
-				if(text.length()>20){
+				if(text.length()>10){
+				Tool.writetotxt("C:\\Users\\rushshi\\Desktop\\topictxt\\20241.txt", text);
 					arraytext.add(text);i++;
 				}
 					
