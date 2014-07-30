@@ -23,21 +23,21 @@ public class Extractkeyword {
 		return txtarray;
 	}
 	
-	
+	public static String[] getkeywords(String code, Date start,int preinterval,int interval ) throws ParseException, IOException{
+		ArrayList<String> txtarray = GetTopicTxtArray(code,start, preinterval);
+		txtarray.add(DBControl.GetText(code, Tool.addday(start, preinterval),  Tool.addday(start, preinterval+interval)));
+		HashMap<Integer, HashMap<String, Float>>  alltf = Tf_idf.tfOfAllTopics(txtarray);
+		System.out.println("all tf have got");
+		HashMap<String, Float> idfs = Tf_idf.idf(alltf);
+		return Tf_idf.keywords(alltf, idfs);
+	}
 	
 	public static void main(String[] args) throws IOException, ParseException {
 		DBControl.init("xueqiu");
 		String code = "SZ002024";
+		Date start = Tool.format.parse("2014-06-10 00:00:00");
 //		Tool.writetotxt("C:\\Users\\rushshi\\Desktop\\topictxt\\2024.txt",txtarray);
-		for(int i=9;i<10;i++){
-			Date start = Tool.format.parse("2014-06-10 00:00:00");
-			ArrayList<String> txtarray = GetTopicTxtArray(code,start, 26);
-			txtarray.add(DBControl.GetText(code, Tool.addday(start, 26),  Tool.addday(start, 33)));
-			HashMap<Integer, HashMap<String, Float>>  alltf = Tf_idf.tfOfAllTopics(txtarray);
-			System.out.println("all tf have got");
-			HashMap<String, Float> idfs = Tf_idf.idf(alltf);
-			Tf_idf.tf_idf(alltf, idfs);
-		}
+		getkeywords(code,start,26,7);
 	}
 
 }
