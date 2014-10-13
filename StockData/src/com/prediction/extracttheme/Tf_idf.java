@@ -88,7 +88,7 @@ public class Tf_idf {
     }
     
     //compute tf_idf of every word of every topic
-    public static void tf_idf(HashMap<Integer,HashMap<String, Float>> all_tf,HashMap<String, Float> idfs){
+    public static HashMap<Integer, HashMap<String, Float>> tf_idf(HashMap<Integer,HashMap<String, Float>> all_tf,HashMap<String, Float> idfs){
         HashMap<Integer, HashMap<String, Float>> resTfIdf = new HashMap<Integer, HashMap<String, Float>>();
             
         int docNum = all_tf.size();
@@ -105,13 +105,15 @@ public class Tf_idf {
             resTfIdf.put(i, tfidf);
         }
         System.out.println("TF-IDF for Every file is :");
-        DisTfIdf(resTfIdf);
+        return resTfIdf;
+//        DisTfIdf(resTfIdf);
     }
     
     //print tf_idf value
     public static void DisTfIdf(HashMap<Integer, HashMap<String, Float>> tfidf){
     	for(int i = tfidf.size()-1; i< tfidf.size(); i++){
     		List<Map.Entry<String, Float>> tf_idf = new ArrayList<Map.Entry<String,Float>>(tfidf.get(i).entrySet());
+    		
     		Collections.sort(tf_idf, new Comparator<Map.Entry<String, Float>>() {   
     		    public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2) {      
     		    	if((o2.getValue() - o1.getValue()) > 0){
@@ -121,11 +123,39 @@ public class Tf_idf {
     		    		return -1;
     		    }
     		}); 
+    		
     		for (int j = 0; j < 50; j++) {
     			Map.Entry entry = tf_idf.get(j); 
     			System.out.print(i+entry.getKey().toString() + " = " + entry.getValue().toString() + ", ");
     		}
     		System.out.println(" ");
     	}
+    }
+    
+    //return keywords
+    public static String[] keywords(HashMap<Integer,HashMap<String, Float>> all_tf,HashMap<String, Float> idfs){
+    	HashMap<Integer, HashMap<String, Float>> tfidf = tf_idf(all_tf,idfs);
+    	String[] keywords = new String[Cwr.NUM_KEYWORDS];
+    	for(int i = tfidf.size()-1; i< tfidf.size(); i++){
+    		List<Map.Entry<String, Float>> tf_idf = new ArrayList<Map.Entry<String,Float>>(tfidf.get(i).entrySet());
+    		
+    		Collections.sort(tf_idf, new Comparator<Map.Entry<String, Float>>() {   
+    		    public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2) {      
+    		    	if((o2.getValue() - o1.getValue()) > 0){
+    		    		return 1;
+    		    	}
+    		    	else
+    		    		return -1;
+    		    }
+    		}); 
+    		
+    		for (int j = 0; j < Cwr.NUM_KEYWORDS; j++) {
+    			Map.Entry entry = tf_idf.get(j);
+    			keywords[j] = entry.getKey().toString();
+    			System.out.print(i+entry.getKey().toString() + " = " + entry.getValue().toString() + ", ");
+    		}
+    		System.out.println(" ");
+    	}
+    	return keywords;
     }
 }

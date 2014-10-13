@@ -76,7 +76,7 @@ public class WordFren {
 	
 	
 	public static void main(String[] args) {
-		ArrayList<String> array = WordFren.getWordList("简单说说今天参加苏宁众包大会的观感吧");
+		ArrayList<String> array = WordFren.getWordList("简单说说今天简单参加简单苏宁众包大会的观感吧");
 		for(String txt:array){
 			System.out.println(txt);
 		}

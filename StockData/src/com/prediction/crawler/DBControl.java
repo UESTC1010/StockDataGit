@@ -10,7 +10,6 @@ import com.mongodb.DB;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import com.prediction.semantic.AnalysizeText;
 import com.prediction.training.Tool;
 
 
@@ -126,24 +125,24 @@ public class DBControl {
 			return null;
 	}
 
-	public static double[] GetFeatureFromDB(String code, Date start) {
-		double[] feature = new double[7];
-		
-		BasicDBObject keys = new BasicDBObject();
-		keys.put("_id", start);
-		DBObject data = db.getCollection(code).findOne(keys);
-		if(data != null){
-			feature[0] = Double.valueOf((String) data.get("kaipan"));
-			feature[1] = Double.valueOf((String) data.get("shoupan"));
-			feature[2] = Double.valueOf(((String) data.get("zhangfu")).replace("%", ""));
-			feature[3] = Double.valueOf((String) data.get("zongshou"));
-			feature[4] = Double.valueOf((String) data.get("zhengfu"));
-			feature[5] = Double.valueOf(((String) data.get("huanshou")).replace("%", ""));
-			feature[6] = AnalysizeText.getSentiment(code, start, 1).get(0);
-			return feature;
-		}
-		else
-			return null;
-	}
+//	public static double[] GetFeatureFromDB(String code, Date start) {
+//		double[] feature = new double[7];
+//		
+//		BasicDBObject keys = new BasicDBObject();
+//		keys.put("_id", start);
+//		DBObject data = db.getCollection(code).findOne(keys);
+//		if(data != null){
+//			feature[0] = Double.valueOf((String) data.get("kaipan"));
+//			feature[1] = Double.valueOf((String) data.get("shoupan"));
+//			feature[2] = Double.valueOf(((String) data.get("zhangfu")).replace("%", ""));
+//			feature[3] = Double.valueOf((String) data.get("zongshou"));
+//			feature[4] = Double.valueOf((String) data.get("zhengfu"));
+//			feature[5] = Double.valueOf(((String) data.get("huanshou")).replace("%", ""));
+//			feature[6] = AnalysizeText.getSentiment(code, start, 1).get(0);
+//			return feature;
+//		}
+//		else
+//			return null;
+//	}
 
 }
